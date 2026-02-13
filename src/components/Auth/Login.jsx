@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { redirect } from "react-router";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +16,9 @@ const Login = () => {
         },
         { withCredentials: true },
       );
+      if (res) {
+        redirect("/");
+      }
     } catch (error) {
       console.log(error);
     }
