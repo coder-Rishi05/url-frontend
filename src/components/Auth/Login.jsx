@@ -1,12 +1,24 @@
+import axios from "axios";
 import { useState } from "react";
 
 const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleClick = async()=>{
-    
-  }
+  const handleClick = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/api/auth/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex items-center pt-20 justify-center">
@@ -19,12 +31,26 @@ const Login = () => {
         </h1>
 
         <label className="label">Email</label>
-        <input type="email" className="input" placeholder="Email" />
+        <input
+          value={email}
+          type="email"
+          className="input"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
         <label className="label">Password</label>
-        <input type="password" className="input" placeholder="Password" />
+        <input
+          value={password}
+          type="password"
+          className="input"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <button className="btn btn-neutral mt-4">Login</button>
+        <button className="btn btn-neutral mt-4" onClick={handleClick}>
+          Login
+        </button>
       </fieldset>
     </div>
   );
