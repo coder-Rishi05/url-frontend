@@ -2,3 +2,7 @@
 @plugin "daisyui" {
   themes: all;
 }
+
+body {
+  @apply bg-zinc-950 text-white antialiased;
+}
