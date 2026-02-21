@@ -5,18 +5,22 @@ import CreateUrl from "../components/CreateUrl";
 import UrlTable from "../components/UrlTable";
 import { useAuth } from "../context/AuthContext";
 import { fetchUserUrls } from "../lib/api";
+import toast from "react-hot-toast";
 
 function Dashboard() {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
+
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadUrls = async () => {
     try {
+      setLoading(true);
+
       const data = await fetchUserUrls();
-      setUrls(data.data);
+      setUrls(data.data || []);
     } catch (error) {
-      console.error("Failed to fetch URLs");
+      toast.error("Failed to fetch URLs");
     } finally {
       setLoading(false);
     }
@@ -26,13 +30,14 @@ function Dashboard() {
     loadUrls();
   }, []);
 
+  const remainingCredits = user?.credits?.total - user?.credits?.used;
+
   return (
     <div className="min-h-screen bg-base-100">
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-
-        {/* Welcome + Credits */}
+        {/* Welcome Section */}
         <Card>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
@@ -45,7 +50,7 @@ function Dashboard() {
             </div>
 
             <div className="badge badge-primary badge-lg">
-              Credits: {user?.credits?.total - user?.credits?.used}
+              Credits: {remainingCredits}
             </div>
           </div>
         </Card>
@@ -59,7 +64,6 @@ function Dashboard() {
         <Card>
           <UrlTable urls={urls} loading={loading} />
         </Card>
-
       </div>
     </div>
   );

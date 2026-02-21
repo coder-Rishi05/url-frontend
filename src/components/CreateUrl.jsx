@@ -3,9 +3,10 @@ import Input from "./ui/Input";
 import Button from "./ui/Button";
 import { createShortUrl } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 function CreateUrl({ onSuccess }) {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   const [form, setForm] = useState({
     originalUrl: "",
@@ -25,11 +26,21 @@ function CreateUrl({ onSuccess }) {
 
     try {
       setLoading(true);
+
       await createShortUrl(form);
+
+      await refreshUser();     // 🔥 Refresh credits
+      await onSuccess();       // 🔥 Reload URL table
+
+      toast.success("Short URL created successfully 🚀");
+
       setForm({ originalUrl: "", customAlias: "" });
-      onSuccess();
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
+      const message =
+        err.response?.data?.message || "Something went wrong";
+
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -40,7 +51,6 @@ function CreateUrl({ onSuccess }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-
       <Input
         label="Original URL"
         name="originalUrl"
@@ -73,7 +83,6 @@ function CreateUrl({ onSuccess }) {
           You have no remaining credits.
         </p>
       )}
-
     </form>
   );
 }
