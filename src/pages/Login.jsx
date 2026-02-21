@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
+import { loginUser } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -15,11 +18,18 @@ function Login() {
       [e.target.name]: e.target.value,
     }));
   };
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Later: API call
+
+    try {
+      await login(formData);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(error.response?.data?.message);
+    }
   };
 
   return (

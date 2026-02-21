@@ -1,13 +1,28 @@
-import "./App.css";
-import Navbar from "./components/NavBar/Navbar";
-import Routing from "./components/routes/Routing";
-
 function App() {
   return (
-    <div data-theme="forest" className=" w-full h-screen">
-      <Navbar />
-      <Routing />
-    </div>
+    <BrowserRouter>
+      <div data-theme="forest" className="min-h-screen">
+        <Routes>
+          
+          {/* Default redirect */}
+          <Route path="/" element={<Navigate to="/login" />} />
+
+          {/* Public Route */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected Route */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
