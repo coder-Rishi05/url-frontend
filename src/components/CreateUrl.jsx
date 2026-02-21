@@ -15,6 +15,7 @@ function CreateUrl({ onSuccess }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [shortUrl, setShortUrl] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,10 +28,14 @@ function CreateUrl({ onSuccess }) {
     try {
       setLoading(true);
 
-      await createShortUrl(form);
+      const data = await createShortUrl(form);
 
-      await refreshUser();     // 🔥 Refresh credits
-      await onSuccess();       // 🔥 Reload URL table
+      const fullUrl = `${import.meta.env.VITE_API_BASE_URL}/${data.shortCode}`;
+
+      setShortUrl(fullUrl);
+
+      await refreshUser();
+      await onSuccess();
 
       toast.success("Short URL created successfully 🚀");
 
@@ -82,6 +87,31 @@ function CreateUrl({ onSuccess }) {
         <p className="text-error text-sm">
           You have no remaining credits.
         </p>
+      )}
+
+      {/* Generated Short URL */}
+      {shortUrl && (
+        <div className="bg-base-200 p-3 rounded-lg flex justify-between items-center">
+          <a
+            href={shortUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline break-all"
+          >
+            {shortUrl}
+          </a>
+
+          <button
+            type="button"
+            className="btn btn-sm btn-outline"
+            onClick={() => {
+              navigator.clipboard.writeText(shortUrl);
+              toast.success("Copied to clipboard ✅");
+            }}
+          >
+            Copy
+          </button>
+        </div>
       )}
     </form>
   );

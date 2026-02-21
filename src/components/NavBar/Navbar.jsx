@@ -14,11 +14,11 @@ const Navbar = () => {
       {/* Right Section */}
       <div className="flex items-center gap-4">
         {/* Credits Display */}
-        {user && (
-          <div className="badge badge-primary badge-lg">
-            Credits: {user.credits}
-          </div>
-        )}
+       {user?.credits && (
+  <div className="badge badge-primary badge-lg">
+    Credits: {user.credits.total - user.credits.used}
+  </div>
+)}
 
         {/* Avatar Dropdown */}
         <div className="dropdown dropdown-end">

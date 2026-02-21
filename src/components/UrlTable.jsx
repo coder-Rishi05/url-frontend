@@ -9,12 +9,14 @@ function UrlTable({ urls, loading }) {
 
   if (!urls.length)
     return (
-      <p className="text-center text-base-content/60">No URLs created yet.</p>
+      <p className="text-center text-base-content/60">
+        No URLs created yet.
+      </p>
     );
 
   const handleCopy = async (shortCode, id) => {
     try {
-      const shortUrl = `${window.location.origin}/${shortCode}`;
+      const shortUrl = `${import.meta.env.VITE_API_BASE_URL}/${shortCode}`;
 
       await navigator.clipboard.writeText(shortUrl);
 
@@ -46,13 +48,17 @@ function UrlTable({ urls, loading }) {
           {urls.map((url) => {
             const expired = new Date(url.expiresAt) < new Date();
 
+            const shortUrl = `${import.meta.env.VITE_API_BASE_URL}/${url.shortCode}`;
+
             return (
               <tr key={url._id}>
-                <td className="max-w-xs truncate">{url.originalUrl}</td>
+                <td className="max-w-xs truncate">
+                  {url.originalUrl}
+                </td>
 
                 <td>
                   <a
-                    href={`${window.location.origin}/${url.shortCode}`}
+                    href={shortUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="link link-primary"
@@ -79,7 +85,9 @@ function UrlTable({ urls, loading }) {
 
                 <td>
                   <button
-                    onClick={() => handleCopy(url.shortCode, url._id)}
+                    onClick={() =>
+                      handleCopy(url.shortCode, url._id)
+                    }
                     className="btn btn-xs btn-outline"
                   >
                     {copiedId === url._id ? "Copied!" : "Copy"}

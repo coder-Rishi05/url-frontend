@@ -7,27 +7,20 @@ import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <div data-theme="forest" className="min-h-screen">
-      <>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: "#1f2937",
-              color: "#fff",
-              border: "1px solid #374151",
-            },
-          }}
-        />
-        <Routing />
-      </>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1f2937",
+            color: "#fff",
+            border: "1px solid #374151",
+          },
+        }}
+      />
+
       <Routes>
-        {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
-
-        {/* Public Route */}
         <Route path="/login" element={<Login />} />
-
-        {/* Protected Route */}
         <Route
           path="/dashboard"
           element={
