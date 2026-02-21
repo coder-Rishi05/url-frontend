@@ -9,27 +9,26 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // 🔹 Fetch current logged-in user (session restore)
-  const fetchCurrentUser = async () => {
-    try {
-      const data = await getCurrentUser();
-      setUser(data.user); // adjust based on your backend response structure
-    } catch (error) {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchCurrentUser = async () => {
+  try {
+    const data = await getCurrentUser();
+    setUser(data.user ? data.user : data);
+  } catch (error) {
+    setUser(null);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // 🔹 Login function
-  const login = async (credentials) => {
-    try {
-      await loginUser(credentials);
-      await fetchCurrentUser(); // hydrate from /auth/me
-    } catch (error) {
-      throw error;
-    }
-  };
-
+const login = async (credentials) => {
+  try {
+    await loginUser(credentials);
+    const data = await getCurrentUser();
+    setUser(data.user ? data.user : data);
+  } catch (error) {
+    throw error;
+  }
+};
   // 🔹 Logout function
   const logout = async () => {
     try {

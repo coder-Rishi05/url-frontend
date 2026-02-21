@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
-import { loginUser } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 function Login() {
   const [formData, setFormData] = useState({

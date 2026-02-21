@@ -1,28 +1,31 @@
+import { Routes, Route, Navigate } from "react-router";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+
 function App() {
   return (
-    <BrowserRouter>
-      <div data-theme="forest" className="min-h-screen">
-        <Routes>
-          
-          {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/login" />} />
+    <div data-theme="forest" className="min-h-screen">
+      <Routes>
 
-          {/* Public Route */}
-          <Route path="/login" element={<Login />} />
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-          {/* Protected Route */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+        {/* Public Route */}
+        <Route path="/login" element={<Login />} />
 
-        </Routes>
-      </div>
-    </BrowserRouter>
+        {/* Protected Route */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+    </div>
   );
 }
 
