@@ -1,26 +1,21 @@
 import React, { useState } from "react";
-import api from "../api/axios";
+
 import { useNavigate } from "react-router";
 
+import toast from "react-hot-toast";
+import { signupUser } from "../lib/api";
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState(null);
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post(
-        "/api/auth/signup",
-        {
-          firstname: firstName,
-          email: email,
-          password: password,
-        },
-        { withCredentials: true },
-      );
-      console.log(res.data);
+      await signupUser({ firstname: firstName, email, password });
+      toast.success("Account created!");
       navigate("/login");
     } catch (error) {
       setErr(error.response?.data?.error || "Something went wrong");

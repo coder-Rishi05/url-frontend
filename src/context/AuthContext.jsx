@@ -64,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: !!user,
     login,
+
     logout,
     refreshUser: fetchCurrentUser, // future credit refresh use
   };

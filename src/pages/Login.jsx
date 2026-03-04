@@ -4,34 +4,15 @@ import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
-import api from "../api/axios";
-import toast from "react-hot-toast";
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-
+  const {login} = useAuth()
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await api.post(
-        "/api/auth/login",
-        {
-          email,
-          password,
-        },
-        { withCredentials: true },
-      );
-
-      toast.success(res.data.messgae);
-      const token = res.data.token;
-      localStorage.setItem("jwt", token);
-      navigate("/dashboard")
-    } catch (error) {
-      setError(error?.response?.data?.message);
-    }
+    await login({ email, password })
   };
 
   return (
