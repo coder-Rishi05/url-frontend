@@ -4,30 +4,33 @@ import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
 function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await login(formData);
-      navigate("/dashboard");
+      const res = await api.post(
+        "/api/auth/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
+
+      toast.success(res.data.messgae);
+      const token = res.data.token;
+      localStorage.setItem("jwt", token);
+      navigate("/dashboard")
     } catch (error) {
-      console.error(error.response?.data?.message);
+      setError(error?.response?.data?.message);
     }
   };
 
@@ -52,8 +55,8 @@ function Login() {
               type="email"
               name="email"
               placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
 
@@ -62,8 +65,8 @@ function Login() {
               type="password"
               name="password"
               placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
 
@@ -75,7 +78,12 @@ function Login() {
           {/* Footer */}
           <p className="text-sm text-center text-base-content/60">
             Don’t have an account?{" "}
-            <span className="link link-primary cursor-pointer">Sign up</span>
+            <span
+              className="link link-primary cursor-pointer"
+              onClick={() => navigate("/signup")}
+            >
+              Sign up
+            </span>
           </p>
         </div>
       </Card>

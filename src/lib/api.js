@@ -1,12 +1,16 @@
 import api from "../api/axios";
 
 export const getCurrentUser = async () => {
-  const response = await api.get(`/auth/me?t=${Date.now()}`);
+  const response = await api.get(`/api/auth/me?t=${Date.now()}`);
   return response.data;
 };
 
+export const SignUp = async (data)=>{
+  const response = await api.post("/api/auth/login",data)
+}
+
 export const loginUser = async (data) => {
-  const response = await api.post("/auth/login", data);
+  const response = await api.post("/api/auth/login", data);
   return response.data;
 };
 
