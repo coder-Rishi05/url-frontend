@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import Spinner from "./ui/Spinner";
 import toast from "react-hot-toast";
+import { deactivateUrl } from "../lib/api";
 
-function UrlTable({ urls, loading }) {
+function UrlTable({ urls, loading, onRefresh }) {
   const [copiedId, setCopiedId] = useState(null);
 
   if (loading) return <Spinner />;
 
   if (!urls.length)
     return (
-      <p className="text-center text-base-content/60">
-        No URLs created yet.
-      </p>
+      <p className="text-center text-base-content/60">No URLs created yet.</p>
     );
 
   const handleCopy = async (shortCode, id) => {
@@ -28,6 +27,16 @@ function UrlTable({ urls, loading }) {
       }, 1500);
     } catch (error) {
       toast.error("Failed to copy link");
+    }
+  };
+
+  const handleDeactivate = async (id) => {
+    try {
+      await deactivateUrl(id);
+      toast.success("url deactivated successfully");
+      onRefresh();
+    } catch (error) {
+      toast.error("Failed to deactivate");
     }
   };
 
@@ -52,9 +61,7 @@ function UrlTable({ urls, loading }) {
 
             return (
               <tr key={url._id}>
-                <td className="max-w-xs truncate">
-                  {url.originalUrl}
-                </td>
+                <td className="max-w-xs truncate">{url.originalUrl}</td>
 
                 <td>
                   <a
@@ -83,14 +90,18 @@ function UrlTable({ urls, loading }) {
                   </span>
                 </td>
 
-                <td>
+                <td className="flex gap-3">
                   <button
-                    onClick={() =>
-                      handleCopy(url.shortCode, url._id)
-                    }
+                    onClick={() => handleCopy(url.shortCode, url._id)}
                     className="btn btn-xs btn-outline"
                   >
                     {copiedId === url._id ? "Copied!" : "Copy"}
+                  </button>
+                  <button
+                    className="btn bg-red-500 btn-xs btn-outline"
+                    onClick={() => handleDeactivate(url._id)}
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
-import { createShortUrl } from "../lib/api";
+import { createUrls } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -28,7 +28,7 @@ function CreateUrl({ onSuccess }) {
     try {
       setLoading(true);
 
-      const data = await createShortUrl(form);
+      const data = await createUrls(form);
 
       const fullUrl = `${import.meta.env.VITE_API_BASE_URL}/${data.shortCode}`;
 
@@ -41,8 +41,7 @@ function CreateUrl({ onSuccess }) {
 
       setForm({ originalUrl: "", customAlias: "" });
     } catch (err) {
-      const message =
-        err.response?.data?.message || "Something went wrong";
+      const message = err.response?.data?.message || "Something went wrong";
 
       setError(message);
       toast.error(message);
@@ -51,8 +50,7 @@ function CreateUrl({ onSuccess }) {
     }
   };
 
-  const remainingCredits =
-    user?.credits?.total - user?.credits?.used;
+  const remainingCredits = user?.credits?.total - user?.credits?.used;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,9 +82,7 @@ function CreateUrl({ onSuccess }) {
       </Button>
 
       {remainingCredits <= 0 && (
-        <p className="text-error text-sm">
-          You have no remaining credits.
-        </p>
+        <p className="text-error text-sm">You have no remaining credits.</p>
       )}
 
       {/* Generated Short URL */}

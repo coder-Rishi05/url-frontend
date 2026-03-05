@@ -33,10 +33,13 @@ const Navbar = () => {
           </div>
 
           <ul
-            tabIndex={0} 
+            tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 w-52 rounded-box bg-base-100 shadow-lg"
           >
             <li className="px-2 py-1 text-sm opacity-70">{user?.email}</li>
+            <li className="px-2 py-1 text-sm opacity-70  capitalize bg-zinc-950 rounded-2xl">
+              {user?.role}
+            </li>
 
             <li>
               <button onClick={logout} className="text-error">

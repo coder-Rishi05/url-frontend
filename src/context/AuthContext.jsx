@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }) => {
 
       toast.success("Login successful 🎉");
       navigate("/dashboard");
+      
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
       throw error;
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   // 🔹 Logout
   const logout = async () => {
     try {
-      await api.post("/auth/logout"); // no need for withCredentials if configured in axios
+      await api.post("/api/auth/logout"); // no need for withCredentials if configured in axios
 
       setUser(null);
 
@@ -64,7 +65,6 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: !!user,
     login,
-
     logout,
     refreshUser: fetchCurrentUser, // future credit refresh use
   };

@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 
 function Dashboard() {
   const { user } = useAuth();
-
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,9 +34,7 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-base-100">
       <Navbar />
-
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {/* Welcome Section */}
         <Card>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
@@ -54,15 +51,13 @@ function Dashboard() {
             </div>
           </div>
         </Card>
-
-        {/* Create URL */}
+        {/* create url */}
         <Card>
           <CreateUrl onSuccess={loadUrls} />
         </Card>
-
-        {/* URL Table */}
+        {/* create table */}
         <Card>
-          <UrlTable urls={urls} loading={loading} />
+          <UrlTable urls={urls} loading={loading} onRefresh={loadUrls}  />
         </Card>
       </div>
     </div>

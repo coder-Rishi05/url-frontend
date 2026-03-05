@@ -8,8 +8,6 @@ function ProtectedRoute({ children }) {
   if (loading) return <Spinner />;
 
   if (!user) return <Navigate to="/login" replace />;
-
   return children;
 }
-
 export default ProtectedRoute;
