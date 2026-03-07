@@ -4,6 +4,8 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import Signup from "./pages/Signup";
+import AdminBoard from "./admin/AdminBoard";
+import AdminRoute from "./components/auth/AdminRoute";
 
 function App() {
   return (
@@ -29,6 +31,14 @@ function App() {
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/adminDashboard"
+          element={
+            <AdminRoute>
+              <AdminBoard />
+            </AdminRoute>
           }
         />
       </Routes>

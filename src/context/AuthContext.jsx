@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
+ 
   // 🔹 Login
   const login = async (credentials) => {
     try {
@@ -33,7 +33,6 @@ export const AuthProvider = ({ children }) => {
 
       toast.success("Login successful 🎉");
       navigate("/dashboard");
-      
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
       throw error;
