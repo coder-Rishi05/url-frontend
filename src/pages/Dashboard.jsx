@@ -4,7 +4,7 @@ import Card from "../components/ui/Card";
 import CreateUrl from "../components/CreateUrl";
 import UrlTable from "../components/UrlTable";
 import { useAuth } from "../context/AuthContext";
-import { fetchUserUrls } from "../lib/api";
+import { fetchUserUrls, requestApi } from "../lib/api";
 import toast from "react-hot-toast";
 
 function Dashboard() {
@@ -22,6 +22,15 @@ function Dashboard() {
       toast.error("Failed to fetch URLs");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getMoreCredits = async () => {
+    try {
+      const data = await requestApi(10);
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message);
     }
   };
 
@@ -45,9 +54,16 @@ function Dashboard() {
                 Manage your shortened URLs
               </p>
             </div>
-
-            <div className="badge badge-primary badge-lg">
-              Credits: {remainingCredits}
+            <div className="flex gap-4 px-4 p-6">
+              <div className="btn btn-primary btn-outline">
+                Credits: {remainingCredits}
+              </div>
+              <button
+                onClick={getMoreCredits}
+                className="btn text-zinc-300 font-bold btn-soft btn-success"
+              >
+                Add Credits (+10)
+              </button>
             </div>
           </div>
         </Card>
@@ -57,7 +73,7 @@ function Dashboard() {
         </Card>
         {/* create table */}
         <Card>
-          <UrlTable urls={urls} loading={loading} onRefresh={loadUrls}  />
+          <UrlTable urls={urls} loading={loading} onRefresh={loadUrls} />
         </Card>
       </div>
     </div>

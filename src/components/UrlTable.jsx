@@ -15,7 +15,7 @@ function UrlTable({ urls, loading, onRefresh }) {
 
   const handleCopy = async (shortCode, id) => {
     try {
-      const shortUrl = `${import.meta.env.VITE_API_BASE_URL}/${shortCode}`;
+      const shortUrl = `${import.meta.env.VITE_API_BASE_URL_Live}/${shortCode}`;
 
       await navigator.clipboard.writeText(shortUrl);
 
@@ -57,7 +57,7 @@ function UrlTable({ urls, loading, onRefresh }) {
           {urls.map((url) => {
             const expired = new Date(url.expiresAt) < new Date();
 
-            const shortUrl = `${import.meta.env.VITE_API_BASE_URL}/${url.shortCode}`;
+            const shortUrl = `${import.meta.env.VITE_API_BASE_URL_Live}/${url.shortCode}`;
 
             return (
               <tr key={url._id}>

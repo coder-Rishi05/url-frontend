@@ -30,7 +30,7 @@ function CreateUrl({ onSuccess }) {
 
       const data = await createUrls(form);
 
-      const fullUrl = `${import.meta.env.VITE_API_BASE_URL}/${data.shortCode}`;
+      const fullUrl = `${import.meta.env.VITE_API_BASE_URL_Live}/${data.shortCode}`;
 
       setShortUrl(fullUrl);
 
