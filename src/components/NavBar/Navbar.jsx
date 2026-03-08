@@ -1,8 +1,10 @@
 import React from "react";
 import { useAuth } from "../../context/AuthContext";
+import { Link, useNavigate } from "react-router";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="navbar bg-base-100 shadow-md px-6">
@@ -21,33 +23,61 @@ const Navbar = () => {
         )}
 
         {/* Avatar Dropdown */}
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
+
+        {!user && (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate("/login")}
           >
-            <div className="w-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-              {user?.firstname?.charAt(0)?.toUpperCase() || "U"}
+            Login
+          </button>
+        )}
+
+        {user && (
+          <div className="dropdown dropdown-end ">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                {user?.firstname?.charAt(0)?.toUpperCase() || "U"}
+              </div>
             </div>
+
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 w-52 rounded-box bg-base-100 shadow-lg"
+            >
+              <li className="px-2 py-1 text-sm opacity-70">{user?.email}</li>
+              <li className="px-2 py-1 text-sm opacity-70  capitalize hover:bg-zinc-800 rounded-2xl">
+                {user?.role}
+              </li>
+              {user?.role === "admin" && (
+                <Link
+                  to={"/dashboard"}
+                  className="px-2 py-1 text-sm opacity-70  capitalize hover:bg-zinc-800 rounded-2xl"
+                >
+                  DashBoard
+                </Link>
+              )}
+              {user?.role === "admin" && (
+                <Link
+                  to={"/adminDashboard"}
+                  className="px-2 py-1 text-sm opacity-70  capitalize hover:bg-zinc-800 rounded-2xl"
+                >
+                  AdmindashBoard
+                </Link>
+              )}
+
+              <li>
+                <button onClick={logout} className="text-error">
+                  Logout
+                </button>
+              </li>
+            </ul>
           </div>
-
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 w-52 rounded-box bg-base-100 shadow-lg"
-          >
-            <li className="px-2 py-1 text-sm opacity-70">{user?.email}</li>
-            <li className="px-2 py-1 text-sm opacity-70  capitalize bg-zinc-950 rounded-2xl">
-              {user?.role}
-            </li>
-
-            <li>
-              <button onClick={logout} className="text-error">
-                Logout
-              </button>
-            </li>
-          </ul>
-        </div>
+        )}
       </div>
     </div>
   );

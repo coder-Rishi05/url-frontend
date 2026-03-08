@@ -42,7 +42,7 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-base-100">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
         <Card>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">

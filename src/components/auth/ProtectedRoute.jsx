@@ -9,7 +9,7 @@ function ProtectedRoute({ children }) {
 
   if (!user) return <Navigate to="/login" replace />;
 
- if (user.role !== "user") return <Navigate to="/dashboard" />
+  if (user.role === "user") return <Navigate to="/dashboard" />;
 
   return children;
 }

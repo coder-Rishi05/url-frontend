@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Signup from "./pages/Signup";
 import AdminBoard from "./admin/AdminBoard";
 import AdminRoute from "./components/auth/AdminRoute";
+import Navbar from "./components/NavBar/Navbar";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           },
         }}
       />
+      <Navbar />
 
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
