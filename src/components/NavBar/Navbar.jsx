@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router";
+import { getAllUsers } from "../../lib/api";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const loadUsers = async () => {
+    setLoading(true);
+    try {
+      const data = await getAllUsers();
+      setUsers(data.data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUsers();
+    loadUsers();
+  }, []);
 
   return (
     <div className="navbar bg-base-100 shadow-md px-6">

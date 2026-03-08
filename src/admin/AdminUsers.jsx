@@ -11,6 +11,7 @@ const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creditInputs, setCreditInputs] = useState({});
+  const [actionLoading, setActionLoading] = useState({});
 
   const loadUsers = async () => {
     setLoading(true);
@@ -28,32 +29,50 @@ const AdminUsers = () => {
     loadUsers();
   }, []);
 
-  // TODO: implement role toggle logic
+  const setAction = (key, val) =>
+    setActionLoading((prev) => ({ ...prev, [key]: val }));
+
   const handleRoleToggle = async (user) => {
-    let newRole;
-    user.role === "admin" ? (newRole = "user") : (newRole = "admin");
+    const newRole = user.role === "admin" ? "user" : "admin";
+    setAction(`role-${user._id}`, true);
     try {
       const res = await updateUserRole(user._id, newRole);
-      console.log(res.message);
       toast.success(res.message);
       loadUsers();
     } catch (error) {
-      console.log(error?.response?.data?.message);
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to update role");
+    } finally {
+      setAction(`role-${user._id}`, false);
     }
   };
 
-  // TODO: implement status toggle logic
   const handleStatusToggle = async (user) => {
-    // call updateUserStatus
-    // on success: loadUsers()
+    const status = !user.isActive;
+    setAction(`status-${user._id}`, true);
+    try {
+      const res = await updateUserStatus(user._id, status);
+      toast.success(res.message);
+      loadUsers();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to update status");
+    } finally {
+      setAction(`status-${user._id}`, false);
+    }
   };
 
-  // TODO: implement credits add logic
   const handleCreditsAdd = async (userId) => {
-    // get value from creditInputs[userId]
-    // call updateUserCredits
-    // on success: loadUsers(), reset input
+    const credit = creditInputs[userId];
+    setAction(`credit-${userId}`, true);
+    try {
+      const res = await updateUserCredits(userId, credit);
+      toast.success(res.message);
+      setCreditInputs((prev) => ({ ...prev, [userId]: "" }));
+      loadUsers();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add credits");
+    } finally {
+      setAction(`credit-${userId}`, false);
+    }
   };
 
   if (loading)
@@ -72,69 +91,122 @@ const AdminUsers = () => {
 
   return (
     <div className="space-y-3">
+      {/* Header row */}
+      <div className="flex items-center justify-between px-1 pb-2 border-b border-base-300">
+        <span className="text-xs tracking-widest uppercase text-base-content/40">
+          {users.length} Users
+        </span>
+        <button
+          onClick={loadUsers}
+          className="btn btn-xs btn-ghost tracking-widest"
+        >
+          ↺ Refresh
+        </button>
+      </div>
+
       {users.map((user) => {
         const remaining = user.credits.total - user.credits.used;
+        const usedPct = user.credits.total
+          ? Math.round((user.credits.used / user.credits.total) * 100)
+          : 0;
 
         return (
           <div
             key={user._id}
-            className="bg-base-200 border border-base-300 rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-4"
+            className="bg-base-200 border border-base-300 rounded-2xl p-5 flex flex-col gap-4"
           >
-            {/* Avatar + Info */}
-            <div className="flex items-center gap-3 flex-1">
+            {/* Top row — avatar + info + badges */}
+            <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm flex-shrink-0">
                 {user.firstname?.charAt(0).toUpperCase()}
               </div>
-              <div>
-                <p className="font-semibold text-sm">{user.firstname}</p>
-                <p className="text-xs text-base-content/50">{user.email}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-sm truncate">
+                  {user.firstname}
+                </p>
+                <p className="text-xs text-base-content/50 truncate">
+                  {user.email}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <span
+                  className={`badge badge-sm ${user.role === "admin" ? "badge-warning" : "badge-ghost"}`}
+                >
+                  {user.role}
+                </span>
+                <div className="flex items-center gap-1">
+                  <div
+                    className={`w-1.5 h-1.5 rounded-full ${user.isActive ? "bg-success animate-pulse" : "bg-error"}`}
+                  />
+                  <span className="text-xs text-base-content/50">
+                    {user.isActive ? "Active" : "Inactive"}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Credits Info */}
-            <div className="flex gap-4 text-xs text-base-content/60">
-              <span>
-                Total:{" "}
-                <span className="text-base-content font-mono font-bold">
-                  {user.credits.total}
+            {/* Credits bar */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-xs text-base-content/50">
+                <span>Credits Used</span>
+                <span>
+                  <span className="font-mono font-bold text-base-content">
+                    {user.credits.used}
+                  </span>
+                  {" / "}
+                  <span className="font-mono font-bold text-base-content">
+                    {user.credits.total}
+                  </span>
+                  {"  ·  "}
+                  <span
+                    className={`font-mono font-bold ${remaining === 0 ? "text-error" : remaining < 5 ? "text-warning" : "text-success"}`}
+                  >
+                    {remaining} left
+                  </span>
                 </span>
-              </span>
-              <span>
-                Used:{" "}
-                <span className="text-base-content font-mono font-bold">
-                  {user.credits.used}
-                </span>
-              </span>
-              <span>
-                Left:{" "}
-                <span
-                  className={`font-mono font-bold ${remaining === 0 ? "text-error" : remaining < 5 ? "text-warning" : "text-success"}`}
-                >
-                  {remaining}
-                </span>
-              </span>
+              </div>
+              <div className="w-full h-1.5 bg-base-300 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-500 ${usedPct > 80 ? "bg-error" : usedPct > 50 ? "bg-warning" : "bg-success"}`}
+                  style={{ width: `${usedPct}%` }}
+                />
+              </div>
             </div>
 
             {/* Actions */}
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-wrap gap-2 items-center pt-1 border-t border-base-300">
               {/* Role Toggle */}
               <button
                 onClick={() => handleRoleToggle(user)}
+                disabled={actionLoading[`role-${user._id}`]}
                 className={`btn btn-xs ${user.role === "admin" ? "btn-warning" : "btn-outline"}`}
               >
-                {user.role === "admin" ? "Make User" : "Make Admin"}
+                {actionLoading[`role-${user._id}`] ? (
+                  <span className="loading loading-spinner loading-xs" />
+                ) : user.role === "admin" ? (
+                  "Make User"
+                ) : (
+                  "Make Admin"
+                )}
               </button>
 
               {/* Status Toggle */}
               <button
                 onClick={() => handleStatusToggle(user)}
+                disabled={actionLoading[`status-${user._id}`]}
                 className={`btn btn-xs ${user.isActive ? "btn-error btn-outline" : "btn-success btn-outline"}`}
               >
-                {user.isActive ? "Deactivate" : "Activate"}
+                {actionLoading[`status-${user._id}`] ? (
+                  <span className="loading loading-spinner loading-xs" />
+                ) : user.isActive ? (
+                  "Deactivate"
+                ) : (
+                  "Activate"
+                )}
               </button>
 
               {/* Credits Add */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 ml-auto">
                 <input
                   type="number"
                   min="1"
@@ -150,9 +222,17 @@ const AdminUsers = () => {
                 />
                 <button
                   onClick={() => handleCreditsAdd(user._id)}
+                  disabled={
+                    actionLoading[`credit-${user._id}`] ||
+                    !creditInputs[user._id]
+                  }
                   className="btn btn-xs btn-primary"
                 >
-                  Add
+                  {actionLoading[`credit-${user._id}`] ? (
+                    <span className="loading loading-spinner loading-xs" />
+                  ) : (
+                    "+ Add"
+                  )}
                 </button>
               </div>
             </div>
