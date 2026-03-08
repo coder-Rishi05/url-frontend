@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import AdminBoard from "./admin/AdminBoard";
 import AdminRoute from "./components/auth/AdminRoute";
 import Navbar from "./components/NavBar/Navbar";
+import AdminUsers from "./admin/AdminUsers";
 
 function App() {
   return (
@@ -40,6 +41,14 @@ function App() {
           element={
             <AdminRoute>
               <AdminBoard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/adminUsers"
+          element={
+            <AdminRoute>
+              <AdminUsers />
             </AdminRoute>
           }
         />
