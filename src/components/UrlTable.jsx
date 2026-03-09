@@ -32,10 +32,12 @@ function UrlTable({ urls, loading, onRefresh }) {
 
   const handleDeactivate = async (id) => {
     try {
-      await deactivateUrl(id);
+     const res = await deactivateUrl(id);
       toast.success("url deactivated successfully");
+      console.log(res.data)
       onRefresh();
     } catch (error) {
+      console.log(error?.response?.data?.message)
       toast.error("Failed to deactivate");
     }
   };
