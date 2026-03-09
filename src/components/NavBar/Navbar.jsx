@@ -24,7 +24,6 @@ const Navbar = () => {
 
   useEffect(() => {
     loadUsers();
-    loadUsers();
   }, []);
 
   return (

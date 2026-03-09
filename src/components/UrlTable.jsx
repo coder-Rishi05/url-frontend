@@ -34,7 +34,7 @@ function UrlTable({ urls, loading, onRefresh }) {
     try {
      const res = await deactivateUrl(id);
       toast.success("url deactivated successfully");
-      console.log(res.data)
+      console.log(res)
       onRefresh();
     } catch (error) {
       console.log(error)

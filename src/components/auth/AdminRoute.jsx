@@ -4,13 +4,9 @@ import Spinner from "../ui/Spinner";
 
 function AdminRoute({ children }) {
   const { user, loading } = useAuth();
-
   if (loading) return <Spinner />;
-
   if (!user) return <Navigate to="/login" replace />;
-
-  if (user.role !== "admin") return <Navigate to="/admindashboard" />;
-
+  if (user.role !== "admin") return <Navigate to="/dashboard" />;
   return children;
 }
 export default AdminRoute;

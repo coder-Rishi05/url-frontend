@@ -13,7 +13,6 @@ const AdminCreditReqs = () => {
       // TODO: call getUserCreditRequests(), set requests field into state
       const res = await getUserCreditRequests();
       setRequests(res.requests);
-      toast.success(res.message);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to load requests");
     } finally {
