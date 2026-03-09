@@ -3,6 +3,7 @@ import { getAllUsers } from "../lib/api";
 import AdminUsers from "./AdminUsers";
 import toast from "react-hot-toast";
 import AdminUrls from "./AdminUrls";
+import AdminCreditReqs from "./AdminCreditReqs";
 
 const TABS = ["Overview", "Users", "Credit Requests", "URLs"];
 
@@ -123,14 +124,14 @@ const AdminBoard = () => {
         {/* Credit Requests Tab */}
         {activeTab === "Credit Requests" && (
           <div className="text-center py-20 text-base-content/40 tracking-widest text-sm">
-          
+            <AdminCreditReqs />
           </div>
         )}
 
         {/* URLs Tab */}
         {activeTab === "URLs" && (
           <div className="text-center py-20 text-base-content/40 tracking-widest text-sm">
-             <AdminUrls />
+            <AdminUrls />
           </div>
         )}
       </div>

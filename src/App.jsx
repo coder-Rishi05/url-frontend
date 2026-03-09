@@ -44,14 +44,6 @@ function App() {
             </AdminRoute>
           }
         />
-        <Route
-          path="/adminUsers"
-          element={
-            <AdminRoute>
-              <AdminUsers />
-            </AdminRoute>
-          }
-        />
       </Routes>
     </div>
   );
