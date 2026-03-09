@@ -37,7 +37,7 @@ function UrlTable({ urls, loading, onRefresh }) {
       console.log(res.data)
       onRefresh();
     } catch (error) {
-      console.log(error?.response?.data?.message)
+      console.log(error)
       toast.error("Failed to deactivate");
     }
   };
