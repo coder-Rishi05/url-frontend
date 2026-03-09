@@ -2,6 +2,25 @@ import React, { useEffect, useState } from "react";
 import { getUserCreditRequests, approveUserCreditRequests } from "../lib/api";
 import toast from "react-hot-toast";
 
+const ReqCardSkeleton = () => (
+  <div className="bg-base-200 border border-base-300 rounded-2xl p-4 sm:p-5 flex flex-col gap-3 animate-pulse">
+    <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-full bg-base-300 flex-shrink-0" />
+        <div className="space-y-2">
+          <div className="h-3.5 w-24 bg-base-300 rounded" />
+          <div className="h-3 w-32 bg-base-300 rounded" />
+        </div>
+      </div>
+      <div className="h-5 w-16 bg-base-300 rounded-full" />
+    </div>
+    <div className="flex items-center gap-2 px-1">
+      <div className="h-3 w-20 bg-base-300 rounded" />
+      <div className="h-6 w-10 bg-base-300 rounded" />
+    </div>
+  </div>
+);
+
 const AdminCreditReqs = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +29,6 @@ const AdminCreditReqs = () => {
   const loadRequests = async () => {
     setLoading(true);
     try {
-      // TODO: call getUserCreditRequests(), set requests field into state
       const res = await getUserCreditRequests();
       setRequests(res.requests);
     } catch (error) {
@@ -29,11 +47,8 @@ const AdminCreditReqs = () => {
       const res = await approveUserCreditRequests(id);
       toast.success(res.message);
       loadRequests();
-      // TODO: call approveUserCreditRequests(id), toast.success, loadRequests()
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Failed to approve request",
-      );
+      toast.error(error?.response?.data?.message || "Failed to approve request");
     } finally {
       setAction(id, false);
     }
@@ -47,24 +62,33 @@ const AdminCreditReqs = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+      <div className="space-y-3">
+        <div className="flex items-center justify-between px-1 pb-2 border-b border-base-300">
+          <div className="h-3 w-24 bg-base-300 rounded animate-pulse" />
+          <div className="h-6 w-16 bg-base-300 rounded-lg animate-pulse" />
+        </div>
+        {[...Array(3)].map((_, i) => (
+          <ReqCardSkeleton key={i} />
+        ))}
       </div>
     );
 
   if (requests.length === 0)
     return (
-      <p className="text-center text-base-content/40 py-10 tracking-widest text-sm">
-        NO CREDIT REQUESTS FOUND
-      </p>
+      <div className="flex flex-col items-center justify-center py-20 gap-3">
+        <span className="text-4xl">📭</span>
+        <p className="text-base-content/40 tracking-widest text-sm uppercase">
+          No credit requests found
+        </p>
+      </div>
     );
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 text-left">
       {/* Header */}
       <div className="flex items-center justify-between px-1 pb-2 border-b border-base-300">
         <div className="flex items-center gap-2">
-          <span className="text-xs tracking-widest uppercase text-base-content/40">
+          <span className="text-xs sm:text-sm tracking-widest uppercase text-base-content/40">
             {requests.length} Requests
           </span>
           {pendingCount > 0 && (
@@ -75,7 +99,7 @@ const AdminCreditReqs = () => {
         </div>
         <button
           onClick={loadRequests}
-          className="btn btn-xs btn-ghost tracking-widest"
+          className="btn btn-xs sm:btn-sm btn-ghost tracking-widest"
         >
           ↺ Refresh
         </button>
@@ -85,31 +109,31 @@ const AdminCreditReqs = () => {
       {requests.map((req) => (
         <div
           key={req._id}
-          className="bg-base-200 border border-base-300 rounded-2xl p-5 flex flex-col gap-3"
+          className="bg-base-200 border border-base-300 rounded-2xl p-4 sm:p-5 flex flex-col gap-3"
         >
-          {/* Top row — user info + status badge */}
+          {/* Top row — avatar + user info + status */}
           <div className="flex items-center justify-between gap-2">
-            {/* Avatar + user info */}
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm flex-shrink-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm flex-shrink-0">
                 {req.user?.firstname?.charAt(0).toUpperCase()}
               </div>
-              <div>
-                <p className="font-semibold text-sm">{req.user?.firstname}</p>
-                <p className="text-xs text-base-content/50">
+              <div className="min-w-0">
+                <p className="font-semibold text-sm sm:text-base truncate">
+                  {req.user?.firstname}
+                </p>
+                <p className="text-xs sm:text-sm text-base-content/50 truncate">
                   {req.user?.email}
                 </p>
               </div>
             </div>
 
-            {/* Status badge */}
             <span
-              className={`badge badge-sm ${
+              className={`badge badge-sm sm:badge-md shrink-0 ${
                 req.reqStatus === "pending"
                   ? "badge-warning"
                   : req.reqStatus === "approved"
-                    ? "badge-success"
-                    : "badge-error"
+                  ? "badge-success"
+                  : "badge-error"
               }`}
             >
               {req.reqStatus.toUpperCase()}
@@ -118,22 +142,24 @@ const AdminCreditReqs = () => {
 
           {/* Credits requested */}
           <div className="flex items-center gap-2 px-1">
-            <span className="text-xs text-base-content/40 tracking-widest uppercase">
+            <span className="text-xs sm:text-sm text-base-content/40 tracking-widest uppercase">
               Requested
             </span>
-            <span className="font-mono font-bold text-lg text-primary">
+            <span className="font-mono font-bold text-xl sm:text-2xl text-primary">
               +{req.creditRequested}
             </span>
-            <span className="text-xs text-base-content/40">credits</span>
+            <span className="text-xs sm:text-sm text-base-content/40">
+              credits
+            </span>
           </div>
 
-          {/* Bottom row — approve button */}
+          {/* Approve button — only for pending */}
           {req.reqStatus === "pending" && (
             <div className="flex justify-end pt-1 border-t border-base-300">
               <button
                 onClick={() => handleApprove(req._id)}
                 disabled={actionLoading[req._id]}
-                className="btn btn-xs btn-success"
+                className="btn btn-xs sm:btn-sm btn-success"
               >
                 {actionLoading[req._id] ? (
                   <span className="loading loading-spinner loading-xs" />

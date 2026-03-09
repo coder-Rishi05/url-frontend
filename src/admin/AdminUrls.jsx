@@ -2,16 +2,35 @@ import React, { useEffect, useState } from "react";
 import { getUrls, deleteUrls } from "../lib/api";
 import toast from "react-hot-toast";
 
+// Shimmer skeleton for a single URL card
+const UrlCardSkeleton = () => (
+  <div className="bg-base-200 border border-base-300 rounded-2xl p-4 sm:p-5 flex flex-col gap-3 animate-pulse">
+    {/* Top row */}
+    <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
+        <div className="h-4 w-24 bg-base-300 rounded" />
+        <div className="h-5 w-14 bg-base-300 rounded-full" />
+      </div>
+      <div className="h-4 w-16 bg-base-300 rounded" />
+    </div>
+    {/* Original URL */}
+    <div className="h-3 w-3/4 bg-base-300 rounded" />
+    {/* Bottom row */}
+    <div className="flex items-center justify-between pt-1 border-t border-base-300">
+      <div className="h-3 w-28 bg-base-300 rounded" />
+      <div className="h-6 w-16 bg-base-300 rounded-lg" />
+    </div>
+  </div>
+);
+
 const AdminUrls = () => {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
-  
   const [actionLoading, setActionLoading] = useState({});
 
   const loadUrls = async () => {
     setLoading(true);
     try {
-      // TODO: call getUrls(), set data.urls into urls state
       const res = await getUrls();
       setUrls(res.urls);
     } catch (error) {
@@ -31,7 +50,6 @@ const AdminUrls = () => {
       console.log(res.data);
       toast.success(res.message);
       loadUrls();
-      // TODO: call deleteUrls(id), toast.success, loadUrls()
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to delete URL");
     } finally {
@@ -56,28 +74,37 @@ const AdminUrls = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+      <div className="space-y-3">
+        <div className="flex items-center justify-between px-1 pb-2 border-b border-base-300">
+          <div className="h-3 w-16 bg-base-300 rounded animate-pulse" />
+          <div className="h-6 w-16 bg-base-300 rounded-lg animate-pulse" />
+        </div>
+        {[...Array(4)].map((_, i) => (
+          <UrlCardSkeleton key={i} />
+        ))}
       </div>
     );
 
   if (urls.length === 0)
     return (
-      <p className="text-center text-base-content/40 py-10 tracking-widest text-sm">
-        NO URLS FOUND
-      </p>
+      <div className="flex flex-col items-center justify-center py-20 gap-3">
+        <span className="text-4xl">🔗</span>
+        <p className="text-base-content/40 tracking-widest text-sm uppercase">
+          No URLs found
+        </p>
+      </div>
     );
 
   return (
     <div className="space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between px-1 pb-2 border-b border-base-300">
-        <span className="text-xs tracking-widest uppercase text-base-content/40">
+        <span className="text-xs sm:text-sm tracking-widest uppercase text-base-content/40">
           {urls.length} URLs
         </span>
         <button
           onClick={loadUrls}
-          className="btn btn-xs btn-ghost tracking-widest"
+          className="btn btn-xs sm:btn-sm btn-ghost tracking-widest"
         >
           ↺ Refresh
         </button>
@@ -90,12 +117,12 @@ const AdminUrls = () => {
         return (
           <div
             key={url._id}
-            className="bg-base-200 border border-base-300 rounded-2xl p-5 flex flex-col gap-3"
+            className="bg-base-200 border border-base-300 rounded-2xl p-4 sm:p-5 flex flex-col gap-3"
           >
-            {/* Top row — shortcode + status badges */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-primary text-sm">
+            {/* Top row — shortcode + badges + clicks */}
+            <div className="flex items-start sm:items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center gap-2 min-w-0">
+                <span className="font-mono font-bold text-primary text-sm sm:text-base">
                   /{url.shortCode}
                 </span>
                 <span
@@ -111,38 +138,55 @@ const AdminUrls = () => {
               </div>
 
               {/* Click count */}
-              <div className="flex items-center gap-1 text-xs text-base-content/50">
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-base-content/50 shrink-0">
                 <span>👆</span>
                 <span className="font-mono font-bold text-base-content">
                   {url.clickCount}
                 </span>
-                <span>clicks</span>
+                <span className="hidden sm:inline">clicks</span>
               </div>
             </div>
 
             {/* Original URL */}
-            <div className="text-xs text-base-content/50 truncate">
+            <p
+              className="text-xs sm:text-sm text-base-content/50 truncate"
+              title={url.originalUrl}
+            >
               <span className="text-base-content/30 mr-1">→</span>
               {url.originalUrl}
-            </div>
+            </p>
 
-            {/* Bottom row — expiry + delete */}
-            <div className="flex items-center justify-between pt-1 border-t border-base-300">
-              <span className="text-xs text-base-content/40">
-                Expires:{" "}
-                <span
-                  className={`font-mono ${expired ? "text-error" : "text-base-content/60"}`}
-                >
-                  {formatDate(url.expiresAt)}
+            {/* Bottom row — expiry + owner + delete */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-base-300">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-xs sm:text-sm text-base-content/40">
+                  Expires:{" "}
+                  <span
+                    className={`font-mono font-semibold ${
+                      expired ? "text-error" : "text-base-content/60"
+                    }`}
+                  >
+                    {formatDate(url.expiresAt)}
+                  </span>
                 </span>
-              </span>
+
+                {/* Owner name if available */}
+                {url.user?.firstname && (
+                  <span className="text-xs text-base-content/30">
+                    by{" "}
+                    <span className="text-base-content/50 font-medium">
+                      {url.user.firstname}
+                    </span>
+                  </span>
+                )}
+              </div>
 
               {/* Delete — only for inactive urls */}
               {!url.isActive && (
                 <button
                   onClick={() => handleDelete(url._id)}
                   disabled={actionLoading[url._id]}
-                  className="btn btn-xs btn-error btn-outline"
+                  className="btn btn-xs sm:btn-sm btn-error btn-outline"
                 >
                   {actionLoading[url._id] ? (
                     <span className="loading loading-spinner loading-xs" />

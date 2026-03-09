@@ -27,22 +27,15 @@ function CreateUrl({ onSuccess }) {
 
     try {
       setLoading(true);
-
       const data = await createUrls(form);
-
       const fullUrl = `${import.meta.env.VITE_API_BASE_URL_Live}/${data.shortCode}`;
-
       setShortUrl(fullUrl);
-
       await refreshUser();
       await onSuccess();
-
-      toast.success("Short URL created successfully 🚀");
-
+      toast.success("Short URL created 🚀");
       setForm({ originalUrl: "", customAlias: "" });
     } catch (err) {
       const message = err.response?.data?.message || "Something went wrong";
-
       setError(message);
       toast.error(message);
     } finally {
@@ -57,7 +50,7 @@ function CreateUrl({ onSuccess }) {
       <Input
         label="Original URL"
         name="originalUrl"
-        placeholder="https://example.com"
+        placeholder="https://example.com/very-long-url"
         value={form.originalUrl}
         onChange={handleChange}
         required
@@ -71,7 +64,9 @@ function CreateUrl({ onSuccess }) {
         onChange={handleChange}
       />
 
-      {error && <p className="text-error text-sm">{error}</p>}
+      {error && (
+        <p className="text-error text-sm font-medium">{error}</p>
+      )}
 
       <Button
         type="submit"
@@ -82,27 +77,28 @@ function CreateUrl({ onSuccess }) {
       </Button>
 
       {remainingCredits <= 0 && (
-        <p className="text-error text-sm">You have no remaining credits.</p>
+        <p className="text-error text-sm text-center">
+          No credits remaining. Request more from the dashboard.
+        </p>
       )}
 
       {/* Generated Short URL */}
       {shortUrl && (
-        <div className="bg-base-200 p-3 rounded-lg flex justify-between items-center">
+        <div className="bg-base-200 border border-base-300 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <a
             href={shortUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary underline break-all"
+            className="text-primary underline underline-offset-2 break-all text-sm font-medium"
           >
             {shortUrl}
           </a>
-
           <button
             type="button"
-            className="btn btn-sm btn-outline"
+            className="btn btn-sm btn-outline shrink-0 self-start sm:self-auto"
             onClick={() => {
               navigator.clipboard.writeText(shortUrl);
-              toast.success("Copied to clipboard ✅");
+              toast.success("Copied! ✅");
             }}
           >
             Copy

@@ -42,39 +42,34 @@ const AdminBoard = () => {
     { label: "Active Users", value: activeCount, color: "text-success" },
     { label: "Credits Issued", value: totalCredits, color: "text-info" },
     { label: "Credits Used", value: totalUsed, color: "text-error" },
-    {
-      label: "Credits Remaining",
-      value: totalCredits - totalUsed,
-      color: "text-success",
-    },
+    { label: "Credits Remaining", value: totalCredits - totalUsed, color: "text-success" },
   ];
 
   return (
-    <div
-      className="min-h-screen bg-base-100"
-      style={{ fontFamily: "'DM Mono', monospace" }}
-    >
+    <div className="min-h-screen bg-base-100" style={{ fontFamily: "'DM Mono', monospace" }}>
+
       {/* Navbar */}
-      <div className="navbar bg-base-200 border-b border-base-300 px-6 shadow-sm">
+      <div className="navbar bg-base-200 border-b border-base-300 px-4 sm:px-8 shadow-sm">
         <div className="flex-1 flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-          <span className="text-lg font-bold tracking-widest uppercase">
+          <div className="w-2.5 h-2.5 rounded-full bg-success animate-pulse" />
+          <span className="text-base sm:text-xl font-bold tracking-widest uppercase">
             Admin Console
           </span>
         </div>
-        <span className="badge badge-outline badge-sm tracking-widest">
+        <span className="badge badge-outline badge-md tracking-widest text-xs sm:text-sm px-3">
           SHORTIFY
         </span>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-10 space-y-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+
         {/* Tabs */}
         <div className="flex gap-2 flex-wrap">
           {TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`btn btn-sm rounded-xl tracking-widest ${
+              className={`btn btn-sm sm:btn-md rounded-xl tracking-widest text-xs sm:text-sm ${
                 activeTab === tab ? "btn-primary" : "btn-ghost"
               }`}
             >
@@ -86,7 +81,7 @@ const AdminBoard = () => {
         {/* Overview Tab */}
         {activeTab === "Overview" && (
           <div
-            className="grid grid-cols-2 md:grid-cols-3 gap-4"
+            className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(16px)",
@@ -96,20 +91,20 @@ const AdminBoard = () => {
             {statCards.map((stat, i) => (
               <div
                 key={stat.label}
-                className="bg-base-200 border border-base-300 rounded-2xl p-5 flex flex-col gap-1"
+                className="bg-base-200 border border-base-300 rounded-2xl p-5 sm:p-7 flex flex-col gap-2"
                 style={{
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(20px)",
                   transition: `opacity 0.4s ease ${i * 0.07}s, transform 0.4s ease ${i * 0.07}s`,
                 }}
               >
-                <span className="text-xs text-base-content/50 tracking-widest uppercase">
+                <span className="text-xs sm:text-sm text-base-content/50 tracking-widest uppercase">
                   {stat.label}
                 </span>
                 {loading ? (
-                  <span className="loading loading-spinner loading-sm mt-1" />
+                  <span className="loading loading-spinner loading-md mt-1" />
                 ) : (
-                  <span className={`text-3xl font-bold ${stat.color}`}>
+                  <span className={`text-4xl sm:text-5xl font-bold ${stat.color}`}>
                     {stat.value}
                   </span>
                 )}
@@ -134,6 +129,7 @@ const AdminBoard = () => {
             <AdminUrls />
           </div>
         )}
+
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/NavBar/Navbar";
 import Card from "../components/ui/Card";
 import CreateUrl from "../components/CreateUrl";
 import UrlTable from "../components/UrlTable";
@@ -15,7 +14,6 @@ function Dashboard() {
   const loadUrls = async () => {
     try {
       setLoading(true);
-
       const data = await fetchUserUrls();
       setUrls(data.data || []);
     } catch (error) {
@@ -42,39 +40,50 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-base-100">
-      {/* <Navbar /> */}
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
+
+        {/* Header Card */}
         <Card>
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold">
-                Welcome, {user?.firstname} 👋
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+                Welcome back, {user?.firstname} 👋
               </h1>
-              <p className="text-sm text-base-content/60">
-                Manage your shortened URLs
+              <p className="text-sm text-base-content/50 mt-0.5">
+                Manage and track your shortened URLs
               </p>
             </div>
-            <div className="flex gap-4 px-4 p-6">
-              <div className="btn btn-primary btn-outline">
-                Credits: {remainingCredits}
+
+            <div className="flex flex-col xs:flex-row gap-2 sm:gap-3">
+              <div className="btn btn-outline btn-primary btn-sm sm:btn-md pointer-events-none">
+                🪙 Credits: {remainingCredits}
               </div>
               <button
                 onClick={getMoreCredits}
-                className="btn text-zinc-300 font-bold btn-soft btn-success"
+                className="btn btn-success btn-sm sm:btn-md"
               >
-                Add Credits (+10)
+                + Add 10 Credits
               </button>
             </div>
           </div>
         </Card>
-        {/* create url */}
+
+        {/* Create URL */}
         <Card>
+          <h2 className="text-base font-semibold mb-4 text-base-content/80 uppercase tracking-widest text-xs">
+            Shorten a URL
+          </h2>
           <CreateUrl onSuccess={loadUrls} />
         </Card>
-        {/* create table */}
+
+        {/* URL Table */}
         <Card>
+          <h2 className="text-base font-semibold mb-4 text-base-content/80 uppercase tracking-widest text-xs">
+            Your URLs
+          </h2>
           <UrlTable urls={urls} loading={loading} onRefresh={loadUrls} />
         </Card>
+
       </div>
     </div>
   );
