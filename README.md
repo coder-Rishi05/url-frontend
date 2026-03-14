@@ -1,4 +1,6 @@
-# Url shortner
+# Url shortner (scissor-client)
+
+A React-based web client for the Scissor URL Shortener. Supports user authentication, URL management, and an admin dashboard — built with DaisyUI and Axios.
 
 ```
 
@@ -42,3 +44,24 @@
 ├── 📝 readme.md
 └── 📄 vite.config.js
 ```
+
+### Features
+
+- Signup and Login with JWT-based session (managed via httpOnly cookies)
+- Protected routes using a custom ProtectedRoute component
+- Global auth state via React Context (AuthContext)
+- Dashboard showing all created short URLs in a table
+- Create new short URLs using available credits
+- Deactivate URLs directly from the dashboard
+- Admin panel for managing users and approving credit requests
+- All API calls centralized in lib/api.js — no direct Axios calls from components
+
+### Tech Stack
+
+- Framework: React (Vite)
+- Styling: Tailwind CSS + DaisyUI
+- HTTP Client: Axios
+- Routing: React Router v6
+- Notifications: react-hot-toast
+- Deployment: Render
+
