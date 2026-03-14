@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: all;
+  /* themes: all; */
+   themes: light, dark;
 }
 
 body {
   @apply bg-zinc-950 text-white antialiased;
+
 }

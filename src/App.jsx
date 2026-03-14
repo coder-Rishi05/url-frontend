@@ -8,10 +8,11 @@ import AdminBoard from "./admin/AdminBoard";
 import AdminRoute from "./components/auth/AdminRoute";
 import Navbar from "./components/NavBar/Navbar";
 import AdminUsers from "./admin/AdminUsers";
+import Home from "./components/ui/Home";
 
 function App() {
   return (
-    <div data-theme="forest" className="min-h-screen">
+    <div className="min-h-screen">
       <Toaster
         position="top-right"
         toastOptions={{
@@ -25,7 +26,8 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route

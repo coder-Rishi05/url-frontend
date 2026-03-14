@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router";
 import { getAllUsers } from "../../lib/api";
 import toast from "react-hot-toast";
+import { themeContext, useTheme } from "../../context/ThemeContext";
+// import { themeContext } from "../context/ThemeContext";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+
+  // const { theme, setTheme } = useContext(themeContext);
+
+  // console.log(theme);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -43,6 +50,11 @@ const Navbar = () => {
         )}
 
         {/* Avatar Dropdown */}
+
+        <button className="btn btn-ghost btn-circle" onClick={toggleTheme}>
+          {theme === "light" ? "🌙" : "☀️"}
+        </button>
+        {/* </div> */}
 
         {!user && (
           <button
