@@ -186,7 +186,7 @@ const Home = () => {
           <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
             <button
               className="btn btn-primary btn-lg w-full sm:w-auto"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/signup")}
             >
               Get Started Free
             </button>

@@ -3,8 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router";
 import { getAllUsers } from "../../lib/api";
 import toast from "react-hot-toast";
-import { themeContext, useTheme } from "../../context/ThemeContext";
-// import { themeContext } from "../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -12,10 +11,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { theme, toggleTheme } = useTheme();
-
-  // const { theme, setTheme } = useContext(themeContext);
-
-  // console.log(theme);
 
   const loadUsers = async () => {
     setLoading(true);

@@ -1,20 +1,19 @@
 import { createContext, useEffect, useState, useContext } from "react";
 
-export const themeContext = createContext();
+const themeContext = createContext(); // named export hatao
 
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "light",
+    () => localStorage.getItem("theme") || "forest",
   );
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-
     localStorage.setItem("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme((prev) => (prev === "forest" ? "silk" : "forest"));
   };
 
   return (
