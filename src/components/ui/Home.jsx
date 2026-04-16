@@ -124,7 +124,7 @@ const Home = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 }}
-              className="badge badge-warning bg-orange-400/80 text-white font-bold font-mono badge-lg gap-2 px-4 py-3"
+              className="badge badge-warning bg-orange-400/80 text-white font-bold font-mono badge-lg gap-2 px-4 text-sm py-5"
             >
               🚧 Currently in Beta — Feedback welcome!
             </motion.div>
@@ -132,7 +132,7 @@ const Home = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="badge badge-primary badge-lg gap-2 px-4 py-3"
+              className="badge text-sm font-medium badge-primary badge-lg gap-2 px-4 py-5"
             >
               ✨ Free to use — No credit card required
             </motion.div>
