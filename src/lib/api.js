@@ -1,16 +1,21 @@
 import api from "../api/axios";
 
 {
-  /* Auth routes */
+  /* 
+  ------------------------------------------------------------------------------ 
+  Auth routes 
+  ------------------------------------------------------------------------------ 
+  
+  */
 }
-
-export const loginUser = async (data) => {
-  const res = await api.post("/api/auth/login", data);
-  return res.data;
-};
 
 export const signupUser = async (data) => {
   const res = await api.post("/api/auth/signup", data);
+  return res.data;
+};
+
+export const loginUser = async (data) => {
+  const res = await api.post("/api/auth/login", data);
   return res.data;
 };
 
@@ -25,7 +30,12 @@ export const getCurrentUser = async () => {
 };
 
 {
-  /* url routes */
+  /* 
+  ------------------------------------------------------------------------------ 
+  url routes 
+  ------------------------------------------------------------------------------ 
+  
+  */
 }
 
 export const fetchUserUrls = async () => {
@@ -50,7 +60,12 @@ export const requestApi = async (creditAmt) => {
   return res.data;
 };
 
-// admin apis Users
+/* 
+------------------------------------------------------------------------------ 
+admin apis Users 
+------------------------------------------------------------------------------ 
+  
+*/
 
 export const getAllUsers = async () => {
   const res = await api.get("/api/admin/users");
@@ -74,14 +89,23 @@ export const updateUserCredits = async (id, credits) => {
   return res.data;
 };
 
-// stats
+/*
+------------------------------------------------------------------------------ 
+  
+stats
 
+------------------------------------------------------------------------------ 
+  */
 export const adminStats = async () => {
   const res = await api.get("/api/admin/stats");
   return res.data;
 };
 
-// get urls
+/*
+------------------------------------------------------------------------------ 
+  get urls
+------------------------------------------------------------------------------ 
+*/
 
 export const getUrls = async () => {
   const res = await api.get("/api/admin/urls");
@@ -93,7 +117,11 @@ export const deleteUrls = async (id) => {
   return res.data;
 };
 
-// credit request
+/* 
+------------------------------------------------------------------------------ 
+credit request 
+------------------------------------------------------------------------------ 
+*/
 
 export const getUserCreditRequests = async () => {
   const res = await api.get("/api/admin/credit-requests");
